@@ -1,6 +1,5 @@
 package com.orderme.entity;
 
-import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -16,7 +15,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @Entity(name = "User")
 @Table(name = "orderme_user")
-public class User implements Serializable {
+public class User {
 
 	@Id // signifies the primary key
 	@Column(nullable = false, length = 50)
@@ -99,7 +98,7 @@ public class User implements Serializable {
 		return isOutOfSync;
 	}
 
-	public void setOutOfSync(boolean isOutOfSync) {
+	public void setIsOutOfSync(boolean isOutOfSync) {
 		this.isOutOfSync = isOutOfSync;
 	}
 

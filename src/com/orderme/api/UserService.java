@@ -32,25 +32,25 @@ public class UserService extends DBService {
 		
 		EntityManagerFactory entityManagerFactory =  Persistence.createEntityManagerFactory("testjpa");
 	    EntityManager em = entityManagerFactory.createEntityManager();
-	    EntityTransaction userTransaction = em.getTransaction();
 	    
 	    String select = "SELECT us FROM User us WHERE us.email=:email and us.password=:password";
 	    Query query = em.createQuery(select);
 	    query.setParameter("email", user.getEmail());
 	    query.setParameter("password", user.getPassword());
 	    List<User> users = query.getResultList();
+	    if (users.size() != 1) {
+	    	return null;
+	    }
 	    
 		return users.get(0);
 
 	}
 	
 	@POST
-	//@PathParam()
 	@Path("/register")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public int register(User user) throws ClassNotFoundException {
-		Class.forName("org.postgresql.Driver");
 		EntityManagerFactory entityManagerFactory =  Persistence.createEntityManagerFactory("testjpa");
 	    EntityManager em = entityManagerFactory.createEntityManager();
 	    EntityTransaction userTransaction = em.getTransaction();
@@ -63,7 +63,7 @@ public class UserService extends DBService {
 	    userTransaction.commit();
 	    em.close();
 	    entityManagerFactory.close();
-		return 1;
-
+		
+	    return 1;
 	}
 }

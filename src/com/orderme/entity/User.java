@@ -14,7 +14,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @Entity(name = "User")
 @Table(name = "orderme_user")
-public class User implements Serializable {
+public class User {
 
 	@Id // signifies the primary key
 	@Column(nullable = false, length = 50)

@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence
+             http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd"
+             version="2.1">
+    <persistence-unit name="testjpa" transaction-type="RESOURCE_LOCAL">
+        <!-- <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider> -->
+        <!-- <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider> -->
+        <class>com.orderme.entity.User</class>
+        <properties>
+            <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/orderme"/>
+            <property name="openjpa.ConnectionDriverName" value="org.postgresql.Driver"/>
+            <property name="javax.persistence.jdbc.user" value="postgres"/>
+            <property name="javax.persistence.jdbc.password" value="postgres"/>
+            <!-- to auto create table -->
+            <property name="hibernate.hbm2ddl.auto" value="update"/>
+    <property name="openjpa.Log" value="SQL=TRACE"/>
+        </properties>
+    </persistence-unit>
+</persistence>

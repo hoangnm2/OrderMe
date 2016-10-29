@@ -1,6 +1,7 @@
 package com.orderme.api;
 
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -21,7 +22,7 @@ import com.orderme.entity.User;
 
 
 @Path("/user")
-public class LoginService extends DBService {
+public class UserService extends DBService {
 	
 	@POST
 	@Path("/login")
@@ -46,18 +47,16 @@ public class LoginService extends DBService {
 	@POST
 	//@PathParam()
 	@Path("/register")
+	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public int register() throws ClassNotFoundException {
+	public int register(User user) throws ClassNotFoundException {
 		Class.forName("org.postgresql.Driver");
 		EntityManagerFactory entityManagerFactory =  Persistence.createEntityManagerFactory("testjpa");
 	    EntityManager em = entityManagerFactory.createEntityManager();
 	    EntityTransaction userTransaction = em.getTransaction();
 	    
 	    userTransaction.begin();
-	    User user = new User();
-	    user.setEmail("minhhoang@gmail.com");
-	    user.setPassword("pass1234");
-	    user.setName("asd");
+	    user.setCreateDate(new Date());
 	    user.setRole(Role.ADMIN);
 	    
 	    em.persist(user);

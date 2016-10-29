@@ -1,12 +1,14 @@
 package com.orderme.entity;
 
 import java.io.Serializable;
-import java.sql.Date;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -25,14 +27,15 @@ public class User implements Serializable {
 
 	private String name;
 
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int timeLogin;
 
 	@Enumerated(EnumType.STRING)
 	private Role role;
 
-/*	private Date createDate;
+	private Date createDate;
 
-	private Date lastSync;*/
+	private Date lastSync;
 
 	private boolean isOutOfSync;
 
@@ -76,7 +79,7 @@ public class User implements Serializable {
 		this.role = role;
 	}
 
-/*	public Date getCreateDate() {
+	public Date getCreateDate() {
 		return createDate;
 	}
 
@@ -90,7 +93,7 @@ public class User implements Serializable {
 
 	public void setLastSync(Date lastSync) {
 		this.lastSync = lastSync;
-	}*/
+	}
 
 	public boolean isOutOfSync() {
 		return isOutOfSync;

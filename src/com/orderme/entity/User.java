@@ -1,5 +1,6 @@
 package com.orderme.entity;
 
+import java.io.Serializable;
 import java.sql.Date;
 
 import javax.persistence.Column;
@@ -13,7 +14,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @Entity(name = "User")
 @Table(name = "orderme_user")
-public class User {
+public class User implements Serializable {
 
 	@Id // signifies the primary key
 	@Column(nullable = false, length = 50)
@@ -29,9 +30,9 @@ public class User {
 	@Enumerated(EnumType.STRING)
 	private Role role;
 
-	private Date createDate;
+/*	private Date createDate;
 
-	private Date lastSync;
+	private Date lastSync;*/
 
 	private boolean isOutOfSync;
 
@@ -75,7 +76,7 @@ public class User {
 		this.role = role;
 	}
 
-	public Date getCreateDate() {
+/*	public Date getCreateDate() {
 		return createDate;
 	}
 
@@ -89,7 +90,7 @@ public class User {
 
 	public void setLastSync(Date lastSync) {
 		this.lastSync = lastSync;
-	}
+	}*/
 
 	public boolean isOutOfSync() {
 		return isOutOfSync;

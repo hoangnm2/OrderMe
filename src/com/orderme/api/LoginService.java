@@ -27,22 +27,19 @@ public class LoginService extends DBService {
 	@Path("/login")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public String login(User user) throws ClassNotFoundException {
+	public User login(User user) throws ClassNotFoundException {
 		
 		EntityManagerFactory entityManagerFactory =  Persistence.createEntityManagerFactory("testjpa");
 	    EntityManager em = entityManagerFactory.createEntityManager();
 	    EntityTransaction userTransaction = em.getTransaction();
 	    
-	    String select = "SELECT us FROM orderme_user us WHERE us.email=:email and us.password=:password";
+	    String select = "SELECT us FROM User us WHERE us.email=:email and us.password=:password";
 	    Query query = em.createQuery(select);
-	    query.setParameter("userName", user.getEmail());
+	    query.setParameter("email", user.getEmail());
 	    query.setParameter("password", user.getPassword());
 	    List<User> users = query.getResultList();
 	    
-	    userTransaction.commit();
-	    em.close();
-	    entityManagerFactory.close();
-		return "call me hehe";
+		return users.get(0);
 
 	}
 	

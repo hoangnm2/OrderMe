@@ -1,6 +1,5 @@
 package com.orderme.api;
 
-
 import java.util.Date;
 import java.util.List;
 
@@ -17,52 +16,69 @@ import javax.ws.rs.core.MediaType;
 
 import com.orderme.entity.Role;
 import com.orderme.entity.User;
-
-
+import com.orderme.utils.Response;
 
 @Path("/user")
 public class UserService extends DBService {
-	
+
+	final static EntityManager em;
+	final static EntityManagerFactory entityManagerFactory;
+
+	static {
+		entityManagerFactory = Persistence.createEntityManagerFactory("testjpa");
+		em = entityManagerFactory.createEntityManager();
+	}
+
 	@POST
 	@Path("/login")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public User login(User user) throws ClassNotFoundException {
-		
-		EntityManagerFactory entityManagerFactory =  Persistence.createEntityManagerFactory("testjpa");
-	    EntityManager em = entityManagerFactory.createEntityManager();
-	    
-	    String select = "SELECT us FROM User us WHERE us.email=:email and us.password=:password";
-	    Query query = em.createQuery(select);
-	    query.setParameter("email", user.getEmail());
-	    query.setParameter("password", user.getPassword());
-	    List<User> users = query.getResultList();
-	    if (users.size() != 1) {
-	    	return null;
-	    }
-	    
-		return users.get(0);
+		String select = "SELECT us FROM User us WHERE us.email=:email and us.password=:password";
+		Query query = em.createQuery(select);
+		query.setParameter("email", user.getEmail());
+		query.setParameter("password", user.getPassword());
+		List<User> users = query.getResultList();
+		if (users.size() != 1) {
+			return null;
+		}
+		//Login success --> close connection
+		em.close();
 
+		return users.get(0);
 	}
-	
+
 	@POST
 	@Path("/register")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public int register(User user) throws ClassNotFoundException {
-		EntityManagerFactory entityManagerFactory =  Persistence.createEntityManagerFactory("testjpa");
-	    EntityManager em = entityManagerFactory.createEntityManager();
-	    EntityTransaction userTransaction = em.getTransaction();
-	    
-	    userTransaction.begin();
-	    user.setCreateDate(new Date());
-	    user.setRole(Role.ADMIN);
-	    
-	    em.persist(user);
-	    userTransaction.commit();
-	    em.close();
-	    entityManagerFactory.close();
-		
-	    return 1;
+		int flag = checkEmailExists(user);
+		if (Response.SUCCESS != flag) {
+			return flag;
+		}
+		EntityTransaction userTransaction = em.getTransaction();
+
+		userTransaction.begin();
+		user.setCreateDate(new Date());
+		user.setRole(Role.ADMIN);
+
+		em.persist(user);
+		userTransaction.commit();
+		entityManagerFactory.close();
+
+		return Response.SUCCESS;
+	}
+
+	private int checkEmailExists(User user) {
+		String select = "SELECT us FROM User us WHERE us.email=:email and us.password=:password";
+		Query query = em.createQuery(select);
+		query.setParameter("email", user.getEmail());
+		query.setParameter("password", user.getPassword());
+		List<User> users = query.getResultList();
+		if (users.size() > 0) {
+			return Response.EMAIL_EXIST;
+		}
+		return Response.SUCCESS;
 	}
 }

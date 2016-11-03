@@ -11,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 @XmlRootElement
 @Entity(name = "User")
@@ -78,6 +79,7 @@ public class User {
 		this.role = role;
 	}
 
+	@XmlJavaTypeAdapter(DateSerializer.class)
 	public Date getCreateDate() {
 		return createDate;
 	}

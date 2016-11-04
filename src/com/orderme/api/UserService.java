@@ -21,19 +21,18 @@ import com.orderme.utils.Response;
 @Path("/user")
 public class UserService extends DBService {
 
-	final static EntityManager em;
-	final static EntityManagerFactory entityManagerFactory;
+	EntityManager em;
+	EntityManagerFactory entityManagerFactory;
 
-	static {
-		entityManagerFactory = Persistence.createEntityManagerFactory("testjpa");
-		em = entityManagerFactory.createEntityManager();
-	}
 
 	@POST
 	@Path("/login")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public User login(User user) throws ClassNotFoundException {
+		entityManagerFactory = Persistence.createEntityManagerFactory("testjpa");
+		em = entityManagerFactory.createEntityManager();
+		
 		String select = "SELECT us FROM User us WHERE us.email=:email and us.password=:password";
 		Query query = em.createQuery(select);
 		query.setParameter("email", user.getEmail());
@@ -44,6 +43,7 @@ public class UserService extends DBService {
 		}
 		//Login success --> close connection
 		em.close();
+		entityManagerFactory.close();
 
 		return users.get(0);
 	}
@@ -53,8 +53,13 @@ public class UserService extends DBService {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public int register(User user) throws ClassNotFoundException {
+		entityManagerFactory = Persistence.createEntityManagerFactory("testjpa");
+		em = entityManagerFactory.createEntityManager();
+		
 		int flag = checkEmailExists(user);
 		if (Response.SUCCESS != flag) {
+			em.close();
+			entityManagerFactory.close();
 			return flag;
 		}
 		EntityTransaction userTransaction = em.getTransaction();
@@ -65,6 +70,8 @@ public class UserService extends DBService {
 
 		em.persist(user);
 		userTransaction.commit();
+		
+		em.close();
 		entityManagerFactory.close();
 
 		return Response.SUCCESS;

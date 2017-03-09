@@ -23,6 +23,7 @@ public class UserService extends DBService {
 
 	EntityManager em;
 	EntityManagerFactory entityManagerFactory;
+	//WRF
 
 
 	@POST

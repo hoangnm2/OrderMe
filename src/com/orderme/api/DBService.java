@@ -8,6 +8,7 @@ public class DBService {
 	
 	static {
 		try {
+			// This is ada
 			Class.forName("org.postgresql.Driver");
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
